@@ -11,7 +11,7 @@ sudo apt upgrade -y
 echo "==> Installing required packages if missing..."
 
 sudo apt-get install -y jq
-configFile="$HOME/config.json"
+configFile="$HOME/dotfiles/config.json"
 sudo apt-get install -y $(jq -r '.packages[]' $configFile)
 
 echo "==> Installing Neovim if missing..."
@@ -37,6 +37,9 @@ else
     echo "Dotfiles repo already exists at ~/dotfiles. Skipping clone."
 fi
 
+echo "==> Installing zinit..."
+bash -c "$(curl --fail --show-error --silent --location https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/scripts/install.sh)"
+
 echo "==> Setting up Starship config..."
 link_config_file "$HOME/dotfiles/starship/starship.toml" "$HOME/.config/starship.toml"
 
@@ -50,6 +53,8 @@ else
     echo "Zsh is already the default shell."
 fi
 
+echo "==> Running zsh to check for errors..."
+exec zsh
+
 echo
 echo "Dev environment setup complete!"
-echo "Restart your terminal or run: exec zsh"

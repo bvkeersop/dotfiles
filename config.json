@@ -5,10 +5,7 @@
         "curl", 
         "git", 
         "lsd", 
-        "software-properties-common", 
-        "zsh-autosuggestions",
-        "zsh-syntax-highlighting",
-        "zsh-completions",
+        "software-properties-common",
         "fzf"
     ]
 }
