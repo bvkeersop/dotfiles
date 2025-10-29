@@ -1,0 +1,14 @@
+{
+  "packages": 
+    [
+        "zsh", 
+        "curl", 
+        "git", 
+        "lsd", 
+        "software-properties-common", 
+        "zsh-autosuggestions",
+        "zsh-syntax-highlighting",
+        "zsh-completions",
+        "fzf"
+    ]
+}

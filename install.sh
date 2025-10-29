@@ -1,26 +1,34 @@
 #!/bin/bash
 
-set -e  # Exit on any error
+set -euo pipefail  # Exit on any error and treat unset variables as errors
 
 source "$HOME/dotfiles/scripts/link_config_file.sh"
 
 echo "==> Updating system packages..."
-sudo apt update && sudo apt upgrade -y
+sudo apt update
+sudo apt upgrade -y
 
-echo "==> Installing required packages..."
-sudo apt install -y \
-    zsh \
-    curl \
-    git \
-    software-properties-common
+echo "==> Installing required packages if missing..."
 
-echo "==> Installing Neovim..."
-sudo add-apt-repository ppa:neovim-ppa/stable -y
-sudo apt update -y
-sudo apt install neovim -y
+sudo apt-get install -y jq
+configFile="$HOME/config.json"
+sudo apt-get install -y $(jq -r '.packages[]' $configFile)
 
-echo "==> Installing Starship prompt..."
-curl -sS https://starship.rs/install.sh | sh -s -- -y
+echo "==> Installing Neovim if missing..."
+if ! command -v nvim &> /dev/null; then
+    sudo add-apt-repository ppa:neovim-ppa/stable -y
+    sudo apt update -y
+    sudo apt install -y neovim
+else
+    echo "Neovim already installed. Skipping."
+fi
+
+echo "==> Installing Starship prompt if missing..."
+if ! command -v starship &> /dev/null; then
+    curl -sS https://starship.rs/install.sh | sh -s -- -y
+else
+    echo "Starship already installed. Skipping."
+fi
 
 echo "==> Cloning dotfiles repository..."
 if [ ! -d "$HOME/dotfiles" ]; then
@@ -36,8 +44,12 @@ echo "==> Setting up ZSH config..."
 link_config_file "$HOME/dotfiles/zsh/.zshrc" "$HOME/.zshrc"
 
 echo "==> Setting Zsh as your default shell..."
-chsh -s "$(which zsh)"
+if [ "$SHELL" != "$(which zsh)" ]; then
+    chsh -s "$(which zsh)"
+else
+    echo "Zsh is already the default shell."
+fi
 
-echo ""
+echo
 echo "Dev environment setup complete!"
 echo "Restart your terminal or run: exec zsh"
