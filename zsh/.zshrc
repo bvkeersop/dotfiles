@@ -7,7 +7,7 @@ HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
 
-setopt HIST_SAVE_NO_DUPS       # Don’t save duplicate commands
+setopt HIST_SAVE_NO_DUPS        # Don’t save duplicate commands
 setopt INC_APPEND_HISTORY       # Append commands immediately
 setopt SHARE_HISTORY            # Share history across sessions
 
@@ -44,6 +44,7 @@ alias l='ls -l'
 alias la='ls -a'
 alias lla='ls -la'
 alias lt='ls --tree'
+
 ### Added by Zinit's installer
 if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
     print -P "%F{33} %F{220}Installing %F{33}ZDHARMA-CONTINUUM%F{220} Initiative Plugin Manager (%F{33}zdharma-continuum/zinit%F{220})…%f"

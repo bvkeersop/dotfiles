@@ -46,6 +46,9 @@ link_config_file "$HOME/dotfiles/starship/starship.toml" "$HOME/.config/starship
 echo "==> Setting up ZSH config..."
 link_config_file "$HOME/dotfiles/zsh/.zshrc" "$HOME/.zshrc"
 
+echo "==> Setting up Neovim config..."
+link_config_file "$HOME/dotfiles/nvim" "$HOME/.config/nvim"
+
 echo "==> Setting Zsh as your default shell..."
 if [ "$SHELL" != "$(which zsh)" ]; then
     chsh -s "$(which zsh)"
