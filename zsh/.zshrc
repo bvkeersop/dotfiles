@@ -45,6 +45,61 @@ alias la='ls -a'
 alias lla='ls -la'
 alias lt='ls --tree'
 
+
+# ===============================
+# SSH Agent Setup (WSL Compatible)
+# ===============================
+
+# This section ensures you have exactly one persistent ssh-agent
+# and automatically loads your automation key if not yet added.
+
+export SSH_ENV="$HOME/.ssh/agent_env"
+
+# --- Function: Start a new agent and save its environment ---
+function start_agent {
+    echo "[SSH] Starting new ssh-agent..."
+    eval "$(ssh-agent -s)" > /dev/null
+    echo "export SSH_AUTH_SOCK=$SSH_AUTH_SOCK" > "$SSH_ENV"
+    echo "export SSH_AGENT_PID=$SSH_AGENT_PID" >> "$SSH_ENV"
+    chmod 600 "$SSH_ENV"
+}
+
+# --- Reuse existing agent if possible ---
+if [ -f "$SSH_ENV" ]; then
+    source "$SSH_ENV" > /dev/null
+    # Check if the agent process is still running
+    if ! kill -0 $SSH_AGENT_PID 2>/dev/null; then
+        start_agent
+    fi
+else
+    start_agent
+fi
+
+# --- Add SSH key if available and not loaded ---
+# Load key name dynamically from your JSON config
+configFile="$HOME/dotfiles/config.json"
+if [ -f "$configFile" ]; then
+    keyname=$(jq -r '.git_ssh_keyname' "$configFile")
+    KEY="$HOME/.ssh/$keyname"
+    if [ -f "$KEY" ]; then
+        # Check if the key is already added
+        ssh-add -l | grep -q "$(basename "$KEY")"
+        if [ $? -ne 0 ]; then
+            echo "[SSH] Adding key: $KEY"
+            ssh-add "$KEY" >/dev/null
+        fi
+    else
+        echo "[SSH] Key file not found: $KEY"
+    fi
+else
+    echo "[SSH] Config file not found: $configFile"
+fi
+
+
+# ===============================
+# Zinit Bootstrapping (Leave as-is)
+# ===============================
+
 ### Added by Zinit's installer
 if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
     print -P "%F{33} %F{220}Installing %F{33}ZDHARMA-CONTINUUM%F{220} Initiative Plugin Manager (%F{33}zdharma-continuum/zinit%F{220})…%f"
@@ -58,8 +113,6 @@ source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
 
-# Load a few important annexes, without Turbo
-# (this is currently required for annexes)
 zinit light-mode for \
     zdharma-continuum/zinit-annex-as-monitor \
     zdharma-continuum/zinit-annex-bin-gem-node \

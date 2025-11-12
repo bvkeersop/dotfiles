@@ -7,5 +7,6 @@
         "lsd", 
         "software-properties-common",
         "fzf"
-    ]
+    ],
+    "git_ssh_keyname": "id_ed25519_github"
 }

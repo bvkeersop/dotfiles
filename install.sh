@@ -3,6 +3,7 @@
 set -euo pipefail  # Exit on any error and treat unset variables as errors
 
 source "$HOME/dotfiles/scripts/link_config_file.sh"
+source "$HOME/dotfiles/scripts/generate_ssh_key.sh"
 
 echo "==> Updating system packages..."
 sudo apt update
@@ -39,6 +40,12 @@ fi
 
 echo "==> Installing zinit..."
 bash -c "$(curl --fail --show-error --silent --location https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/scripts/install.sh)"
+
+keyname=$(jq -r '.git_ssh_keyname' $configFile)
+read -p "Do you want to generate SSH key $keyname? (y/N) " RESP
+if [[ "$RESP" =~ ^[Yy]$ ]]; then
+    generate_ssh_key "$keyname"
+fi
 
 echo "==> Setting up Starship config..."
 link_config_file "$HOME/dotfiles/starship/starship.toml" "$HOME/.config/starship.toml"
