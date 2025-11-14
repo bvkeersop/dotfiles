@@ -60,6 +60,27 @@ keymap("n", "<leader>pr", "<cmd>lua require('vscode').action('code-runner.run')<
 keymap("n", "<leader>fd", "<cmd>lua require('vscode').action('editor.action.formatDocument')<CR>")
 
 -- ===============================
+-- VSCode Suggestion Navigation (Vim-style)
+-- ===============================
+local keymap = vim.keymap.set
+local opts = { noremap = true, silent = true }
+
+-- Navigate suggestions
+keymap("i", "<C-n>", "<cmd>lua require('vscode').action('selectNextSuggestion')<CR>", opts)
+keymap("i", "<C-p>", "<cmd>lua require('vscode').action('selectPrevSuggestion')<CR>", opts)
+
+-- Accept suggestion (LSP)
+keymap("i", "<C-y>", "<cmd>lua require('vscode').action('acceptSelectedSuggestion')<CR>", opts)
+
+-- Cancel suggestion
+keymap("i", "<C-e>", "<cmd>lua require('vscode').action('hideSuggestWidget')<CR>", opts)
+
+-- Optional: Copilot integration (accept inline suggestions)
+-- Uses <Tab> for Copilot like VSCode defaults
+keymap("i", "<Tab>", "<cmd>lua require('vscode').action('github.copilot.accept')<CR>", opts)
+keymap("i", "<S-Tab>", "<cmd>lua require('vscode').action('github.copilot.dismiss')<CR>", opts)
+
+-- ===============================
 -- Harpoon keymaps (quick file navigation)
 -- ===============================
 keymap("n", "<leader>ha", "<cmd>lua require('vscode').action('vscode-harpoon.addEditor')<CR>")

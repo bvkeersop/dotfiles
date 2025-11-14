@@ -45,6 +45,8 @@ alias la='ls -a'
 alias lla='ls -la'
 alias lt='ls --tree'
 
+# --- Neovim ---
+export PATH="$HOME/neovim/bin:$PATH"
 
 # ===============================
 # SSH Agent Setup (WSL Compatible)

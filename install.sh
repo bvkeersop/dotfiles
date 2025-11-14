@@ -4,6 +4,8 @@ set -euo pipefail  # Exit on any error and treat unset variables as errors
 
 source "$HOME/dotfiles/scripts/link_config_file.sh"
 source "$HOME/dotfiles/scripts/generate_ssh_key.sh"
+source "$HOME/dotfiles/scripts/install_cmake.sh"
+source "$HOME/dotfiles/scripts/install_nvim.sh"
 
 echo "==> Updating system packages..."
 sudo apt update
@@ -15,14 +17,15 @@ sudo apt-get install -y jq
 configFile="$HOME/dotfiles/config.json"
 sudo apt-get install -y $(jq -r '.packages[]' $configFile)
 
-echo "==> Installing Neovim if missing..."
-if ! command -v nvim &> /dev/null; then
-    sudo add-apt-repository ppa:neovim-ppa/stable -y
-    sudo apt update -y
-    sudo apt install -y neovim
-else
-    echo "Neovim already installed. Skipping."
-fi
+install_nvim
+
+# echo "==> Installing Neovim if missing..."
+# if ! command -v nvim &> /dev/null; then
+#     install_cmake
+#     install_nvim
+# else
+#     echo "Neovim already installed. Skipping."
+# fi
 
 echo "==> Installing Starship prompt if missing..."
 if ! command -v starship &> /dev/null; then

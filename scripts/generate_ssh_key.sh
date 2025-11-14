@@ -36,6 +36,3 @@ generate_ssh_key() {
 
     echo "Done! Remember to add $key_path.pub to your GitHub account."
 }
-
-# Call the function with the provided argument
-generate_ssh_key "$1"
