@@ -19,13 +19,13 @@ sudo apt-get install -y $(jq -r '.packages[]' $configFile)
 
 install_nvim
 
-# echo "==> Installing Neovim if missing..."
-# if ! command -v nvim &> /dev/null; then
-#     install_cmake
-#     install_nvim
-# else
-#     echo "Neovim already installed. Skipping."
-# fi
+echo "==> Installing Neovim if missing..."
+if ! command -v nvim &> /dev/null; then
+    install_cmake
+    install_nvim
+else
+    echo "Neovim already installed. Skipping."
+fi
 
 echo "==> Installing Starship prompt if missing..."
 if ! command -v starship &> /dev/null; then
