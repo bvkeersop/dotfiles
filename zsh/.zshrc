@@ -27,6 +27,7 @@ zinit light zsh-users/zsh-syntax-highlighting
 
 # Autosuggestions
 zinit light zsh-users/zsh-autosuggestions
+bindkey '^ ' autosuggest-accept
 
 # Extra completions
 zinit light zsh-users/zsh-completions
